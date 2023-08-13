@@ -1,0 +1,8 @@
+"unlitgeneric"
+{
+	"$basetexture" "yorch/separator"
+	"$model" "1"
+	"$translucent" 1
+	"$additive" 1
+	"$color" "[2 2 2]" // R, G, B son valores de color en formato decimal (0-255)
+}

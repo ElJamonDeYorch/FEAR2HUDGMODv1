@@ -1,0 +1,1 @@
+CreateClientConVar("fear2hud_toggle_playerhealth", "1", true, false, "Toggle rendering of player images")

@@ -1,0 +1,7 @@
+"unlitgeneric"
+{
+	"$basetexture" "yorch/ShotgunShell"
+	"$model" "1"
+	"$translucent" 1
+	"$additive" 1
+}

@@ -1,4 +1,4 @@
-"unlitgeneric"
+"vertexlitgeneric"
 {
 	"$basetexture" "yorch/beckethud"
 	"$model" "1"
@@ -6,4 +6,18 @@
 	"$additive" 1
 	"$color" "[3 3 3]" // R, G, B son valores de color en formato decimal (0-255)
 
+     "$selfillum" "1"
+	"$selfillummask" "yorch/beckethud_si"
+
+	"Proxies"
+	{
+		"Sine"
+		{
+			"resultVar" "$selfIllumTint"
+			"sinemin" 0.75
+			"sinemax" 3.0
+			"sineperiod" 3
+		}
+	}
 }
+

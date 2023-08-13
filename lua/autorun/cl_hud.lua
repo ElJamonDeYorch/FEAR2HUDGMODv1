@@ -29,8 +29,8 @@ hook.Add("HUDPaint", "DrawRotatedText", function()
     local ammoCount = client:GetAmmoCount(10)
     local screenWidth = ScrW()
     local screenHeight = ScrH()
-    local color = Color(201, 253, 255, 255)
-    local outlineColor = Color(0,0,0, 255) -- Outline color
+    local color = Color(255, 255, 255, 255)
+    local outlineColor = Color(19,38,44, 100) -- Outline color
     local angle = 10
 
     local text = tostring(ammoCount)
@@ -56,7 +56,7 @@ hook.Add("HUDPaint", "DrawRotatedText", function()
                 color,
                 TEXT_ALIGN_CENTER,
                 TEXT_ALIGN_CENTER,
-                1, -- Outline thickness
+                4, -- Outline thickness
                 outlineColor -- Outline color
             )
         cam.PopModelMatrix()
@@ -76,8 +76,9 @@ hook.Add("HUDPaint", "DrawRotatedText2", function()
         local ammoCount = client:GetAmmoCount(activeWeapon:GetPrimaryAmmoType())
         local screenWidth = ScrW()
         local screenHeight = ScrH()
-        local color = Color(50, 80, 106, 255)
+        local color = Color(78, 115, 143, 255)
         local angle = 5
+		local outlineColor = Color(19,38,44, 100) -- Outline color
 
         local text = tostring(ammoCount)
 
@@ -96,6 +97,17 @@ hook.Add("HUDPaint", "DrawRotatedText2", function()
             render.SetMaterial(Material("color"))
 
             cam.PushModelMatrix(rotationMatrix)
+            draw.SimpleTextOutlined(
+                text,
+                "MyFont",
+                screenWidth - 250,
+                screenHeight - 160,
+                color,
+                TEXT_ALIGN_CENTER,
+                TEXT_ALIGN_CENTER,
+                4, -- Outline thickness
+                outlineColor -- Outline color
+            )
                 surface.SetTextColor(color)
                 surface.SetTextPos(screenWidth - 250 - textWidth / 2, screenHeight - 160 - textHeight / 2)
                 surface.DrawText(text)
@@ -122,6 +134,8 @@ hook.Add("HUDPaint", "DrawRotatedAmmoText3", function()
     local screenHeight = ScrH()
 
     local angle = 5  -- Desired rotation angle in degrees
+	
+	local outlineColor = Color(19,38,44, 100) -- Outline color
 
     local text = tostring(ammoCount)
     local ammoTextColor = Color(201, 253, 255, 255)
@@ -145,6 +159,17 @@ hook.Add("HUDPaint", "DrawRotatedAmmoText3", function()
         render.SetMaterial(Material("color"))  -- Replace with the desired material
 
         cam.PushModelMatrix(rotationMatrix)
+            draw.SimpleTextOutlined(
+                text,
+                "MyFont",
+                screenWidth - 505,
+                screenHeight - 225,
+                color,
+                TEXT_ALIGN_CENTER,
+                TEXT_ALIGN_CENTER,
+                4, -- Outline thickness
+                outlineColor -- Outline color
+            )
             surface.SetTextColor(ammoTextColor)
             surface.SetTextPos(screenWidth - 505 - textWidth / 2, screenHeight - 225 - textHeight / 2)
             surface.DrawText(text)

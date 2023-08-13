@@ -29,11 +29,16 @@ hook.Add("HUDPaint", "DrawRotatedText", function()
     local ammoCount = client:GetAmmoCount(10)
     local screenWidth = ScrW()
     local screenHeight = ScrH()
-    local color = Color(255, 255, 255, 255)
-    local outlineColor = Color(19,38,44, 100) -- Outline color
     local angle = 10
 
     local text = tostring(ammoCount)
+    local color = Color(255, 255, 255, 255)
+    local outlineColor = Color(19, 38, 44, 100) -- Default outline color
+
+    if ammoCount <= 0 then
+        color = Color(255, 55, 55, 255) -- Change text color to red
+        outlineColor = Color(5, 1, 1, 100) -- Change outline color to red
+    end
 
     surface.SetFont("MyFont")
     local textWidth, textHeight = surface.GetTextSize(text)
@@ -65,7 +70,6 @@ hook.Add("HUDPaint", "DrawRotatedText", function()
         render.PopFilterMag()
     cam.End2D()
 end)
-
 
 
 hook.Add("HUDPaint", "DrawRotatedText2", function()
@@ -134,14 +138,13 @@ hook.Add("HUDPaint", "DrawRotatedAmmoText3", function()
     local screenHeight = ScrH()
 
     local angle = 5  -- Desired rotation angle in degrees
-	
-	local outlineColor = Color(19,38,44, 100) -- Outline color
-
+    local outlineColor = Color(19, 38, 44, 100) -- Outline color
     local text = tostring(ammoCount)
     local ammoTextColor = Color(201, 253, 255, 255)
 
     if ammoPercentage <= lowAmmoThreshold then
-        ammoTextColor = Color(255, 75, 75, 255)
+        ammoTextColor = Color(255, 55, 55, 255)
+        outlineColor = Color(5, 1, 1, 100) -- Red outline color for low ammo
     end
 
     surface.SetFont("MyFont")
@@ -156,23 +159,18 @@ hook.Add("HUDPaint", "DrawRotatedAmmoText3", function()
         render.PushFilterMin(TEXFILTER.ANISOTROPIC)
         render.PushFilterMag(TEXFILTER.ANISOTROPIC)
 
-        render.SetMaterial(Material("color"))  -- Replace with the desired material
-
         cam.PushModelMatrix(rotationMatrix)
             draw.SimpleTextOutlined(
                 text,
                 "MyFont",
                 screenWidth - 505,
                 screenHeight - 225,
-                color,
+                ammoTextColor,
                 TEXT_ALIGN_CENTER,
                 TEXT_ALIGN_CENTER,
                 4, -- Outline thickness
                 outlineColor -- Outline color
             )
-            surface.SetTextColor(ammoTextColor)
-            surface.SetTextPos(screenWidth - 505 - textWidth / 2, screenHeight - 225 - textHeight / 2)
-            surface.DrawText(text)
         cam.PopModelMatrix()
 
         render.PopFilterMin()

@@ -33,7 +33,7 @@ hook.Add("HUDPaint", "DrawRotatedText", function()
     local screenWidth = ScrW()
     local screenHeight = ScrH()
     local color = Color(201, 253, 255, 255)
-    local outlineColor = Color(0,0,0, 255) -- Outline color
+    local outlineColor = Color(19,38,44, 100) -- Outline color
     local angle = 10
 
     local text = tostring(ammoCount)
@@ -59,7 +59,7 @@ hook.Add("HUDPaint", "DrawRotatedText", function()
                 color,
                 TEXT_ALIGN_CENTER,
                 TEXT_ALIGN_CENTER,
-                1, -- Outline thickness
+                4, -- Outline thickness
                 outlineColor -- Outline color
             )
         cam.PopModelMatrix()

@@ -4,6 +4,7 @@
 	"$model" "1"
 	"$translucent" 1
 	"$additive" 1
+     "$decal" 1
 	"$color" "[3 3 3]" // R, G, B son valores de color en formato decimal (0-255)
 
      "$selfillum" "1"
@@ -14,9 +15,9 @@
 		"Sine"
 		{
 			"resultVar" "$selfIllumTint"
-			"sinemin" 0.75
-			"sinemax" 3.0
-			"sineperiod" 3
+			"sinemin" "0.65"
+			"sinemax" "1.5"
+			"sineperiod" "0.75"
 		}
 	}
 }

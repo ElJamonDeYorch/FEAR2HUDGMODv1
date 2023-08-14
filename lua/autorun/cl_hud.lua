@@ -582,72 +582,52 @@ end)
 
 
 
+local speakingPlayers = {} -- Table to keep track of speaking players
+local rotationAngle = 10 -- Fixed rotation angle in degrees
+local textSpacing = 20 -- Vertical spacing between player names
 
+-- This function draws an image and player name on the HUD
+local function DrawVoipImage()
+    surface.SetDrawColor(1, 1, 1, 255)
+    surface.SetMaterial(Material("yorch/vidagif/soundwave"))
+    surface.DrawTexturedRectRotated(300, 850, 124, 64, rotationAngle) -- Static rotation
 
-local function DrawTalkingPlayerPanel()
-    local talkingPlayer = nil
+    surface.SetDrawColor(1, 1, 1, 255)
+    surface.SetMaterial(Material("yorch/vidagif/soundwavebackground"))
+    surface.DrawTexturedRectRotated(300, 850, 256, 12, rotationAngle) -- Static rotation
 
-    for _, ply in pairs(player.GetAll()) do
-        if ply:IsSpeaking() then
-            talkingPlayer = ply
-            break
-        end
-    end
+    local offsetY = 0
 
-    if IsValid(talkingPlayer) then
-        local imageSize = 64
-        local imageX = 10
-        local imageY = ScrH() - imageSize - 10
+    for _, ply in ipairs(speakingPlayers) do
+        local playerName = ply:GetName()
+        local textWidth = draw.GetFontHeight("Bureau Agency FB Bold")
+        local textHeight = draw.GetFontHeight("Bureau Agency FB Bold")
 
-        local customImageMaterial = Material("yorch/voiphud")  -- Replace with the path to your custom image
+        local centerX = 300
+        local centerY = 830 + offsetY
 
-        local namePanelHeight = 100
-        local namePanelWidth = 150
-        local namePanelX = imageSize + 20
-        local namePanelY = ScrH() - namePanelHeight - 10
+        -- Calculate rotated position for text
+        local radians = math.rad(rotationAngle)
+        local rotatedX = centerX + math.cos(radians) * (textWidth / 2)
+        local rotatedY = centerY - math.sin(radians) * (textHeight / 2)
 
-        local panel = vgui.Create("DPanel")
-        panel:SetSize(imageSize, imageSize)
-        panel:SetPos(imageX, imageY)
+        draw.SimpleText(playerName, "MyFont3", rotatedX, rotatedY, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 
-        local imagePanel = vgui.Create("DImage", panel)
-        imagePanel:SetSize(imageSize, imageSize)
-        imagePanel:SetMaterial(customImageMaterial)
-
-        local namePanel = vgui.Create("DPanel")
-        namePanel:SetSize(namePanelWidth, namePanelHeight)
-        namePanel:SetPos(namePanelX, namePanelY)
-
-        local nameLabel = vgui.Create("DLabel", namePanel)
-        nameLabel:SetPos(0, 0)
-        nameLabel:SetSize(namePanelWidth, namePanelHeight)
-        nameLabel:SetText(talkingPlayer:Nick())
-        nameLabel:SetFont("MyFont3")
-        nameLabel:SetTextColor(Color(255, 255, 255))
-        nameLabel:SetContentAlignment(5)  -- Center align text
-
-        timer.Simple(3, function()
-            if IsValid(panel) then
-                panel:Remove()
-            end
-            if IsValid(namePanel) then
-                namePanel:Remove()
-            end
-        end)
-
-        panel.Paint = function(self, w, h)
-            -- Set the background color with transparency (alpha)
-            draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0, 5))
-        end
-
-        namePanel.Paint = function(self, w, h)
-            surface.SetDrawColor(0, 0, 0, 150)
-            surface.DrawRect(0, 0, w, h)  -- Draw a colored rectangle as the background
-        end
+        offsetY = offsetY + textSpacing
     end
 end
 
-hook.Add("HUDPaint", "DrawTalkingPlayerPanel", DrawTalkingPlayerPanel)
+-- Rest of the code remains the same
+
+
+
+
+
+
+
+
+
+
 
 
 

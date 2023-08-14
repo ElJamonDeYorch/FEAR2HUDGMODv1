@@ -1,0 +1,28 @@
+"UnlitGeneric"
+{
+	"$basetexture" "yorch/vidagif/soundwave"
+	"$model" "1"
+	"$translucent" 1
+	"$additive" 1
+	"$color" "[1 1 1]" // Adjust R, G, B values between 0 and 1
+
+	// Proxies
+	"Proxies"
+	{
+		"TextureScroll"
+		{
+			"texturescrollvar" "$basetexturetransform"
+			"texturescrollrate" "0.5"
+			"texturescrollangle" "0.0"
+		}
+
+		// You can remove the Sine proxy if not needed
+		"Sine"
+		{
+			"resultVar" "$selfillumtint"
+			"sinemin" 0.75
+			"sinemax" 3.0
+			"sineperiod" 3
+		}
+	}
+}

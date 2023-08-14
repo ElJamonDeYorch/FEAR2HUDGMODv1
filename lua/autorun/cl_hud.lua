@@ -24,7 +24,12 @@ surface.CreateFont("MyFont3", {
     italic = false
 })
 
-
+surface.CreateFont("MyFont4", {
+    font = "Bureau Agency FB Bold",
+    size = 25,
+    weight = 500,
+    italic = false
+})
 
 
 hook.Add("HUDPaint", "DrawRotatedText", function()
@@ -32,11 +37,19 @@ hook.Add("HUDPaint", "DrawRotatedText", function()
     local ammoCount = client:GetAmmoCount(10)
     local screenWidth = ScrW()
     local screenHeight = ScrH()
-    local color = Color(201, 253, 255, 255)
-    local outlineColor = Color(19,38,44, 100) -- Outline color
     local angle = 10
-
     local text = tostring(ammoCount)
+
+    local lowAmmoThreshold = 0  -- Adjust this value to set the threshold for low ammo
+
+    local outlineColor = Color(19, 38, 44, 100) -- Outline color
+    local color = Color(201, 253, 255, 255)
+
+    -- Check if ammo is low and change text color to red
+    if ammoCount <= lowAmmoThreshold then
+        color = Color(255, 0, 0, 255)
+	outlineColor = Color(7, 1, 1, 100)
+    end
 
     surface.SetFont("MyFont")
     local textWidth, textHeight = surface.GetTextSize(text)
@@ -68,6 +81,7 @@ hook.Add("HUDPaint", "DrawRotatedText", function()
         render.PopFilterMag()
     cam.End2D()
 end)
+
 
 
 
@@ -630,7 +644,7 @@ local function DrawVoipImage()
     local rotationAngle = 10 -- Adjust the rotation angle in degrees
     surface.SetDrawColor(1, 1, 1, 255)
     surface.SetMaterial(Material("yorch/vidagif/soundwave"))
-    surface.DrawTexturedRectRotated(300, 850, 124, 64, rotationAngle) -- Static rotation
+    surface.DrawTexturedRectRotated(300, 850, 124, 32, rotationAngle) -- Static rotation
 
     local rotationAngle = 10 -- Adjust the rotation angle in degrees
     surface.SetDrawColor(1, 1, 1, 255)
@@ -639,7 +653,7 @@ local function DrawVoipImage()
 
     for _, ply in ipairs(speakingPlayers) do
         local playerName = ply:GetName()
-        draw.SimpleText(playerName, "DermaDefault", 300, 830, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        draw.SimpleText(playerName, "MyFont4", 300, 830, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     end
 end
 
@@ -659,13 +673,70 @@ hook.Add("PlayerEndVoice", "DrawVoipImage_PlayerEndVoice", function(ply)
     end
 end)
 
+local function DrawVoipImage()
+    local rotationAngle = 10 -- Adjust the rotation angle in degrees
+    local screenWidth = ScrW()
+    local screenHeight = ScrH()
+
+    local rotationMatrix = Matrix()
+    rotationMatrix:Translate(Vector(screenWidth - 435, screenHeight - 175, 0))
+    rotationMatrix:Rotate(Angle(0, rotationAngle, 0))
+    rotationMatrix:Translate(Vector(-screenWidth + 250, -screenHeight + 160, 0))
+
+    cam.Start2D()
+        render.PushFilterMin(TEXFILTER.ANISOTROPIC)
+        render.PushFilterMag(TEXFILTER.ANISOTROPIC)
+
+        cam.PushModelMatrix(rotationMatrix)
+
+        surface.SetDrawColor(1, 1, 1, 255)
+        surface.SetMaterial(Material("yorch/vidagif/soundwave"))
+        surface.DrawTexturedRectRotated(300, 850, 124, 32, rotationAngle) -- Static rotation
+
+        surface.SetDrawColor(1, 1, 1, 255)
+        surface.SetMaterial(Material("yorch/vidagif/soundwavebackground"))
+        surface.DrawTexturedRectRotated(300, 850, 256, 12, rotationAngle) -- Static rotation
+
+        for _, ply in ipairs(speakingPlayers) do
+            local playerName = ply:GetName()
+            surface.SetFont("MyFont4")
+            local textWidth, textHeight = surface.GetTextSize(playerName)
+            local textX = 300
+            local textY = 830
+
+            draw.SimpleText(
+                playerName,
+                "MyFont4",
+                textX,
+                textY,
+                Color(255, 255, 255, 255),
+                TEXT_ALIGN_CENTER,
+                TEXT_ALIGN_CENTER
+            )
+
+            surface.SetTextPos(textX - textWidth / 2, textY - textHeight / 2)
+            surface.DrawText(playerName)
+        end
+
+        cam.PopModelMatrix()
+
+        render.PopFilterMin()
+        render.PopFilterMag()
+    cam.End2D()
+end
 
 
 
 
 
 
+-- hook.Add("PlayerStartVoice", "ImageOnVoice", function()
+--     hook.Add("HUDPaint", "ImageOnVoice", iconfunc)
+-- end)
 
+-- hook.Add("PlayerEndVoice", "ImageOnVoice", function()
+--     hook.Remove("HUDPaint", "ImageOnVoice")
+-- end)
 
 
 

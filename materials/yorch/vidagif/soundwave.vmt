@@ -1,6 +1,6 @@
 "UnlitGeneric"
 {
-	"$basetexture" "yorch/vidagif/soundwave"
+	"$basetexture" "yorch/vidagif/soundwave2"
 	"$model" "1"
 	"$translucent" 1
 	"$additive" 1
@@ -23,6 +23,12 @@
 			"sinemin" 0.75
 			"sinemax" 3.0
 			"sineperiod" 3
+		}
+		"AnimatedOffsetTexture"
+		{
+			"Animatedtexturevar" "$Basetexture"
+			"Animatedtextureframenumvar" "$frame"
+			"Animatedtextureframerate" "15"
 		}
 	}
 }

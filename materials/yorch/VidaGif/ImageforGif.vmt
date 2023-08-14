@@ -1,6 +1,6 @@
 "unlitgeneric"
 {
-	"$basetexture" "yorch/vidagif/ImageforGif"
+	"$basetexture" "yorch/weaponhud"
 	"$model" "1"
 	"$translucent" 1
 	"$additive" 1

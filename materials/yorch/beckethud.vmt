@@ -1,13 +1,14 @@
-"vertexlitgeneric"
+"Vertexlitgeneric"
 {
 	"$basetexture" "yorch/beckethud"
-	"$model" "1"
+
+
 	"$translucent" 1
 	"$additive" 1
-     "$decal" 1
+
 	"$color" "[3 3 3]" // R, G, B son valores de color en formato decimal (0-255)
 
-     "$selfillum" "1"
+    	 "$selfillum" "1"
 	"$selfillummask" "yorch/beckethud_si"
 
 	"Proxies"
@@ -21,4 +22,3 @@
 		}
 	}
 }
-

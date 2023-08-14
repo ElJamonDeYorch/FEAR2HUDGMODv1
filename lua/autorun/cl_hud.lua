@@ -227,10 +227,21 @@ local function DrawHUD()
     local AlmostHealthBarTexture = Material("yorch/healthbar75") -- Low health bar texture with desired color
     local lowHealthBarTexture = Material("yorch/healthbar50") -- Low health bar texture with desired color
     local criticalHealthBarTexture = Material("yorch/healthbar25") -- Low health bar texture with desired color
-    -- Dibuja el cuadrado texturizado en el HUD
-    surface.SetDrawColor(255, 255, 255, 255)
-    surface.SetMaterial(Material("yorch/beckethud"))
-    surface.DrawTexturedRect(adjustedX, adjustedY, adjustedWidth, adjustedHeight)
+
+
+-- Define the alpha pulse effect parameters
+local alphaFrequency = 1.0    -- Adjust the frequency of the alpha pulse
+local alphaAmplitude = 100    -- Adjust the amplitude of the alpha pulse
+
+-- Calculate the alpha pulse effect
+local time = CurTime() * alphaFrequency
+local alpha = 255 - math.abs(math.sin(time) * alphaAmplitude)
+
+-- Dibuja el cuadrado texturizado en el HUD with alpha pulse effect
+surface.SetDrawColor(255, 255, 255, alpha)
+surface.SetMaterial(Material("yorch/beckethud"))
+surface.DrawTexturedRect(adjustedX, adjustedY, adjustedWidth, adjustedHeight)
+
     -- Dibujar la barra de vida con color según la salud
     local health = LocalPlayer():Health() -- Obtener la vida del jugador local
     local maxHealth = LocalPlayer():GetMaxHealth()
@@ -553,7 +564,7 @@ local armorBatteryImage = Material("yorch/ArmorHUD")
 
 hook.Add("HUDPaint", "ArmorBatteryImage", function()
     local client = LocalPlayer()
-    local armorBatteryDistance = 50  -- Adjust the distance at which the image appears
+    local armorBatteryDistance = 100  -- Adjust the distance at which the image appears
 
     for _, ent in pairs(ents.FindInSphere(client:GetPos(), armorBatteryDistance)) do
         if ent:GetClass() == "item_battery" then
@@ -597,11 +608,11 @@ hook.Add("HUDPaint", "DrawPlayerImages", function()
     local playerList = player.GetAll()
 
     for _, player in pairs(playerList) do
-        if player ~= client and player:GetPos():DistToSqr(client:GetPos()) < 20000 then
+        if player ~= client and player:GetPos():DistToSqr(client:GetPos()) < 500000 then
             local healthPercentage = GetHealthPercentage(player)
             local healthImage = GetImageBasedOnHealth(healthPercentage)
 
-            local headPos = player:GetBonePosition(player:LookupBone("ValveBiped.Bip01_Head1")):ToScreen()
+            local headPos = player:GetBonePosition(player:LookupBone("ValveBiped.Bip01_Spine2")):ToScreen()
             local x = headPos.x
             local y = headPos.y
 
@@ -609,26 +620,21 @@ hook.Add("HUDPaint", "DrawPlayerImages", function()
             
             surface.SetMaterial(healthImage)
             surface.SetDrawColor(255, 255, 255, 255)
-            surface.DrawTexturedRect(x - imageSize / 2, y - imageSize - -180, imageSize, imageSize)
+            surface.DrawTexturedRect(x - imageSize - -10, y - imageSize, imageSize, imageSize)
 
             -- Draw the additional image with scaling
             local additionalImage = Material(path_to_additional_image)
             local additionalImageWidth = 80
-            local additionalImageHeight = 20
+            local additionalImageHeight = 30
             surface.SetMaterial(additionalImage)
-            surface.DrawTexturedRect(x - additionalImageWidth / 2, y - imageSize - additionalImageHeight - -230, additionalImageWidth, additionalImageHeight)
+            surface.DrawTexturedRect(x - additionalImageWidth - -25, y - additionalImageHeight, additionalImageWidth, additionalImageHeight)
 
-            local additionalImage2 = Material(path_to_additional_image2)
-            local additionalImageWidth = 80
-            local additionalImageHeight = 20
-            surface.SetMaterial(additionalImage2)
-            surface.DrawTexturedRect(x - additionalImageWidth / 2, y - imageSize - additionalImageHeight - -200, additionalImageWidth, additionalImageHeight)
 
             -- Draw player name
             local playerName = player:Nick()
             surface.SetFont("MyFont3")
             local textWidth, textHeight = surface.GetTextSize(playerName)
-            surface.SetTextPos(x - textWidth / 2, y - imageSize - additionalImageHeight - -250)
+            surface.SetTextPos(x - textWidth, y - additionalImageHeight - -30)
 	    surface.SetTextColor(Color(100, 200, 100, 255)) -- Set the color (red in this case)
             surface.DrawText(playerName)
         end

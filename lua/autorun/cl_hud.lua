@@ -27,6 +27,47 @@ surface.CreateFont("MyFont3", {
 
 
 
+hook.Add("HUDPaint", "DrawRotatedText", function()
+    local client = LocalPlayer()
+    local ammoCount = client:GetAmmoCount(10)
+    local screenWidth = ScrW()
+    local screenHeight = ScrH()
+    local color = Color(201, 253, 255, 255)
+    local outlineColor = Color(0,0,0, 255) -- Outline color
+    local angle = 10
+
+    local text = tostring(ammoCount)
+
+    surface.SetFont("MyFont")
+    local textWidth, textHeight = surface.GetTextSize(text)
+
+    local rotationMatrix = Matrix()
+    rotationMatrix:Translate(Vector(screenWidth - 245, screenHeight - 135, 0))
+    rotationMatrix:Rotate(Angle(0, angle, 0))
+    rotationMatrix:Translate(Vector(-screenWidth + 250, -screenHeight + 160, 0))
+
+    cam.Start2D()
+        render.PushFilterMin(TEXFILTER.ANISOTROPIC)
+        render.PushFilterMag(TEXFILTER.ANISOTROPIC)
+
+        cam.PushModelMatrix(rotationMatrix)
+            draw.SimpleTextOutlined(
+                text,
+                "MyFont",
+                screenWidth - 250,
+                screenHeight - 160,
+                color,
+                TEXT_ALIGN_CENTER,
+                TEXT_ALIGN_CENTER,
+                1, -- Outline thickness
+                outlineColor -- Outline color
+            )
+        cam.PopModelMatrix()
+
+        render.PopFilterMin()
+        render.PopFilterMag()
+    cam.End2D()
+end)
 
 
 
@@ -583,41 +624,41 @@ end)
 
 
 local speakingPlayers = {} -- Table to keep track of speaking players
-local rotationAngle = 10 -- Fixed rotation angle in degrees
-local textSpacing = 20 -- Vertical spacing between player names
 
 -- This function draws an image and player name on the HUD
 local function DrawVoipImage()
+    local rotationAngle = 10 -- Adjust the rotation angle in degrees
     surface.SetDrawColor(1, 1, 1, 255)
     surface.SetMaterial(Material("yorch/vidagif/soundwave"))
     surface.DrawTexturedRectRotated(300, 850, 124, 64, rotationAngle) -- Static rotation
 
+    local rotationAngle = 10 -- Adjust the rotation angle in degrees
     surface.SetDrawColor(1, 1, 1, 255)
     surface.SetMaterial(Material("yorch/vidagif/soundwavebackground"))
     surface.DrawTexturedRectRotated(300, 850, 256, 12, rotationAngle) -- Static rotation
 
-    local offsetY = 0
-
     for _, ply in ipairs(speakingPlayers) do
         local playerName = ply:GetName()
-        local textWidth = draw.GetFontHeight("Bureau Agency FB Bold")
-        local textHeight = draw.GetFontHeight("Bureau Agency FB Bold")
-
-        local centerX = 300
-        local centerY = 830 + offsetY
-
-        -- Calculate rotated position for text
-        local radians = math.rad(rotationAngle)
-        local rotatedX = centerX + math.cos(radians) * (textWidth / 2)
-        local rotatedY = centerY - math.sin(radians) * (textHeight / 2)
-
-        draw.SimpleText(playerName, "MyFont3", rotatedX, rotatedY, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-
-        offsetY = offsetY + textSpacing
+        draw.SimpleText(playerName, "DermaDefault", 300, 830, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     end
 end
 
--- Rest of the code remains the same
+-- Hook to capture when a player starts talking
+hook.Add("PlayerStartVoice", "DrawVoipImage_PlayerStartVoice", function(ply)
+    if ply == LocalPlayer() then
+        table.insert(speakingPlayers, ply)
+        hook.Add("HUDPaint", "DrawVoipImage_HUDPaint", DrawVoipImage) -- Start drawing the image on HUD
+    end
+end)
+
+-- Hook to capture when a player stops talking
+hook.Add("PlayerEndVoice", "DrawVoipImage_PlayerEndVoice", function(ply)
+    if ply == LocalPlayer() then
+        speakingPlayers = {}
+        hook.Remove("HUDPaint", "DrawVoipImage_HUDPaint") -- Stop drawing the image on HUD
+    end
+end)
+
 
 
 

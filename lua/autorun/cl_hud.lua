@@ -24,52 +24,11 @@ surface.CreateFont("MyFont3", {
     italic = false
 })
 
-hook.Add("HUDPaint", "DrawRotatedText", function()
-    local client = LocalPlayer()
-    local ammoCount = client:GetAmmoCount(10)
-    local screenWidth = ScrW()
-    local screenHeight = ScrH()
-    local angle = 10
 
-    local text = tostring(ammoCount)
-    local color = Color(255, 255, 255, 255)
-    local outlineColor = Color(19, 38, 44, 100) -- Default outline color
 
-    if ammoCount <= 0 then
-        color = Color(255, 55, 55, 255) -- Change text color to red
-        outlineColor = Color(5, 1, 1, 100) -- Change outline color to red
-    end
 
-    surface.SetFont("MyFont")
-    local textWidth, textHeight = surface.GetTextSize(text)
 
-    local rotationMatrix = Matrix()
-    rotationMatrix:Translate(Vector(screenWidth - 245, screenHeight - 135, 0))
-    rotationMatrix:Rotate(Angle(0, angle, 0))
-    rotationMatrix:Translate(Vector(-screenWidth + 250, -screenHeight + 160, 0))
 
-    cam.Start2D()
-        render.PushFilterMin(TEXFILTER.ANISOTROPIC)
-        render.PushFilterMag(TEXFILTER.ANISOTROPIC)
-
-        cam.PushModelMatrix(rotationMatrix)
-            draw.SimpleTextOutlined(
-                text,
-                "MyFont",
-                screenWidth - 250,
-                screenHeight - 160,
-                color,
-                TEXT_ALIGN_CENTER,
-                TEXT_ALIGN_CENTER,
-                4, -- Outline thickness
-                outlineColor -- Outline color
-            )
-        cam.PopModelMatrix()
-
-        render.PopFilterMin()
-        render.PopFilterMag()
-    cam.End2D()
-end)
 
 
 hook.Add("HUDPaint", "DrawRotatedText2", function()
@@ -623,15 +582,83 @@ end)
 
 
 
+
+
+local function DrawTalkingPlayerPanel()
+    local talkingPlayer = nil
+
+    for _, ply in pairs(player.GetAll()) do
+        if ply:IsSpeaking() then
+            talkingPlayer = ply
+            break
+        end
+    end
+
+    if IsValid(talkingPlayer) then
+        local imageSize = 64
+        local imageX = 10
+        local imageY = ScrH() - imageSize - 10
+
+        local customImageMaterial = Material("yorch/voiphud")  -- Replace with the path to your custom image
+
+        local namePanelHeight = 100
+        local namePanelWidth = 150
+        local namePanelX = imageSize + 20
+        local namePanelY = ScrH() - namePanelHeight - 10
+
+        local panel = vgui.Create("DPanel")
+        panel:SetSize(imageSize, imageSize)
+        panel:SetPos(imageX, imageY)
+
+        local imagePanel = vgui.Create("DImage", panel)
+        imagePanel:SetSize(imageSize, imageSize)
+        imagePanel:SetMaterial(customImageMaterial)
+
+        local namePanel = vgui.Create("DPanel")
+        namePanel:SetSize(namePanelWidth, namePanelHeight)
+        namePanel:SetPos(namePanelX, namePanelY)
+
+        local nameLabel = vgui.Create("DLabel", namePanel)
+        nameLabel:SetPos(0, 0)
+        nameLabel:SetSize(namePanelWidth, namePanelHeight)
+        nameLabel:SetText(talkingPlayer:Nick())
+        nameLabel:SetFont("MyFont3")
+        nameLabel:SetTextColor(Color(255, 255, 255))
+        nameLabel:SetContentAlignment(5)  -- Center align text
+
+        timer.Simple(3, function()
+            if IsValid(panel) then
+                panel:Remove()
+            end
+            if IsValid(namePanel) then
+                namePanel:Remove()
+            end
+        end)
+
+        panel.Paint = function(self, w, h)
+            -- Set the background color with transparency (alpha)
+            draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0, 5))
+        end
+
+        namePanel.Paint = function(self, w, h)
+            surface.SetDrawColor(0, 0, 0, 150)
+            surface.DrawRect(0, 0, w, h)  -- Draw a colored rectangle as the background
+        end
+    end
+end
+
+hook.Add("HUDPaint", "DrawTalkingPlayerPanel", DrawTalkingPlayerPanel)
+
+
+
+
+
+
 hook.Add( "HUDDrawTargetID", "HidePlayerInfo", function()
 
 	return false
 
 end )
-
-
-
-
 
 
 function HideHud (name)

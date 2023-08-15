@@ -566,8 +566,24 @@ end)
 
 
 
+local ammoImage = Material("yorch/ammohud")  -- Replace with the path to your ammo image
 
+hook.Add("HUDPaint", "AmmoImage", function()
+    local client = LocalPlayer()
+    local ammoDistance = 100  -- Adjust the distance at which the image appears
 
+    for _, ent in pairs(ents.FindInSphere(client:GetPos(), ammoDistance)) do
+        -- Replace "item_ammo_..." with the appropriate class name for the ammo entity
+        if string.find(ent:GetClass(), "item_ammo_") then
+            local ammoPos = (ent:WorldSpaceCenter() + Vector(0, 0, 5)):ToScreen()
+
+            -- Draw the image at the ammo's position
+            surface.SetMaterial(ammoImage)
+            surface.SetDrawColor(Color(255, 255, 255, 255))
+            surface.DrawTexturedRect(ammoPos.x - 32, ammoPos.y - 32, 128, 128)  -- Adjust size as needed
+        end
+    end
+end)
 
 
 local armorBatteryImage = Material("yorch/ArmorHUD")

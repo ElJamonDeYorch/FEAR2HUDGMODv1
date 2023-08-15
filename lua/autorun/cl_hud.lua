@@ -585,11 +585,31 @@ local function GetHealthPercentage(player)
     return 0
 end
 
-local GOOD_HEALTH_THRESHOLD = 0.75
-local MEDIUM_HEALTH_THRESHOLD = 0.5
-local path_to_additional_image = "yorch/vidagif/imageforgif"
-local path_to_additional_image2 = "yorch/vidagif/imageforgif2"
-local path_to_zero_health_image = "yorch/vidagif/PlayerDead"
+
+
+
+
+
+
+
+
+
+
+local drawPlayerImagesConVar = CreateConVar("f2hud_draw_playerhealth", "1", FCVAR_ARCHIVE, "Enable or disable drawing player images")
+
+hook.Add("HUDPaint", "DrawPlayerImages", function()
+    if not drawPlayerImagesConVar:GetBool() then
+        return
+    end
+
+    local client = LocalPlayer()
+    local playerList = player.GetAll()
+
+    local GOOD_HEALTH_THRESHOLD = 0.75
+    local MEDIUM_HEALTH_THRESHOLD = 0.5
+    local path_to_additional_image = "yorch/vidagif/imageforgif"
+    local path_to_additional_image2 = "yorch/vidagif/imageforgif2"
+    local path_to_zero_health_image = "yorch/vidagif/PlayerDead"
 
 local function GetImageBasedOnHealth(healthPercentage)
     if healthPercentage <= 0 then
@@ -603,10 +623,6 @@ local function GetImageBasedOnHealth(healthPercentage)
     end
 end
 
-hook.Add("HUDPaint", "DrawPlayerImages", function()
-    local client = LocalPlayer()
-    local playerList = player.GetAll()
-
     for _, player in pairs(playerList) do
         if player ~= client and player:GetPos():DistToSqr(client:GetPos()) < 500000 then
             local healthPercentage = GetHealthPercentage(player)
@@ -617,7 +633,7 @@ hook.Add("HUDPaint", "DrawPlayerImages", function()
             local y = headPos.y
 
             local imageSize = 40
-            
+
             surface.SetMaterial(healthImage)
             surface.SetDrawColor(255, 255, 255, 255)
             surface.DrawTexturedRect(x - imageSize - -10, y - imageSize, imageSize, imageSize)
@@ -629,17 +645,19 @@ hook.Add("HUDPaint", "DrawPlayerImages", function()
             surface.SetMaterial(additionalImage)
             surface.DrawTexturedRect(x - additionalImageWidth - -25, y - additionalImageHeight, additionalImageWidth, additionalImageHeight)
 
-
             -- Draw player name
             local playerName = player:Nick()
             surface.SetFont("MyFont3")
             local textWidth, textHeight = surface.GetTextSize(playerName)
             surface.SetTextPos(x - textWidth, y - additionalImageHeight - -30)
-	    surface.SetTextColor(Color(100, 200, 100, 255)) -- Set the color (red in this case)
+            surface.SetTextColor(Color(100, 200, 100, 255)) -- Set the color (green in this case)
             surface.DrawText(playerName)
         end
     end
 end)
+
+
+
 
 
 

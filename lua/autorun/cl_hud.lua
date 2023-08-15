@@ -246,10 +246,10 @@ surface.DrawTexturedRect(adjustedX, adjustedY, adjustedWidth, adjustedHeight)
     local health = LocalPlayer():Health() -- Obtener la vida del jugador local
     local maxHealth = LocalPlayer():GetMaxHealth()
     local healthPercentage = health / maxHealth
-    local barWidth = 213
+     local barWidth = 213
     local barHeight = 85
-    local barX = adjustedX + barWidth + 48
-    local barY = adjustedY + barHeight + 788 -- Separación entre el cuadrado y la barra
+    local barX = adjustedX + barWidth + 40
+    local barY = adjustedY + barHeight + 794 -- Separación entre el cuadrado y la barra
     -- Inside your HUD drawing function
     local textureToUse = healthBarTexture -- Default to normal health bar texture
 if healthPercentage < 0.25 then
@@ -268,17 +268,27 @@ end
 
     local barWidth = 212
     local barHeight = 84
-    local barX = adjustedX + barWidth + 50
-    local barY = adjustedY + barHeight + 790 -- Separación entre el cuadrado y la barra
+    local barX = adjustedX + barWidth + 41
+    local barY = adjustedY + barHeight + 795 -- Separación entre el cuadrado y la barra
     surface.SetDrawColor(255, 255, 255, 255)
     surface.SetMaterial(Material("yorch/healthbackground"))
     surface.DrawTexturedRectUV(barX, barY, barWidth, barHeight, 0, 0, 1, 1)
 
 
+    local barWidth = 36
+    local barHeight = 25
+    local barX = adjustedX + barWidth + 376
+    local barY = adjustedY + barHeight + 868 -- Separación entre el cuadrado y la barra
+    surface.SetDrawColor(255, 255, 255, 255)
+    surface.SetMaterial(Material("yorch/healthcross"))
+    surface.DrawTexturedRectUV(barX, barY, barWidth, barHeight, 0, 0, 1, 1)
+
+
+
     local barWidth = 214
     local barHeight = 86
-    local barX = adjustedX + barWidth + -10
-    local barY = adjustedY + barHeight + 795 -- Separación entre el cuadrado y la barra
+    local barX = adjustedX + barWidth + -18
+    local barY = adjustedY + barHeight + 800 -- Separación entre el cuadrado y la barra
     surface.SetDrawColor(255, 255, 255, 255)
     surface.SetMaterial(Material("yorch/armorbackground"))
     surface.DrawTexturedRectUV(barX, barY, barWidth, barHeight, 0, 0, 1, 1)
@@ -287,17 +297,17 @@ end
     local armor = LocalPlayer():Armor()
     local armorBarWidth = 212
     local armorBarHeight = 84
-    local armorBarX = adjustedX + barWidth + -10
-    local armorBarY = adjustedY + barHeight + 794 -- Separación entre el cuadrado y la barra
+    local armorBarX = adjustedX + barWidth + -18
+    local armorBarY = adjustedY + barHeight + 802 -- Separación entre el cuadrado y la barra
     surface.SetDrawColor(255, 255, 255, 255)
     surface.SetMaterial(Material("yorch/armorbar"))
     surface.DrawTexturedRectUV(armorBarX, armorBarY, armorBarWidth * (armor / 200), armorBarHeight, 0, 0, armor / 200, 1)
 
 
-    local barWidth = 312
-    local barHeight = 122
-    local barX = adjustedX + barWidth + -126
-    local barY = adjustedY + barHeight + 734 -- Separación entre el cuadrado y la barra
+    local barWidth = 300
+    local barHeight = 123
+    local barX = adjustedX + barWidth + -117
+    local barY = adjustedY + barHeight + 739 -- Separación entre el cuadrado y la barra
     surface.SetDrawColor(255, 255, 255, 255)
     surface.SetMaterial(Material("yorch/background"))
     surface.DrawTexturedRectUV(barX, barY, barWidth, barHeight, 0, 0, 1, 1)
@@ -748,7 +758,6 @@ local function DrawVoipImage()
         render.PopFilterMag()
     cam.End2D()
 end
-
 
 
 

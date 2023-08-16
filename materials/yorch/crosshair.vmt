@@ -1,0 +1,6 @@
+"UnlitGeneric"
+{
+	"$basetexture" "vgui/hud/crosshair"
+	$translucent "1"
+	$additive 1
+}

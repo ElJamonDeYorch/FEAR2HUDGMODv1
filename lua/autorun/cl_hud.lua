@@ -581,9 +581,19 @@ hook.Add("HUDPaint", "AmmoImage", function()
             surface.SetMaterial(ammoImage)
             surface.SetDrawColor(Color(255, 255, 255, 255))
             surface.DrawTexturedRect(ammoPos.x - 32, ammoPos.y - 32, 128, 128)  -- Adjust size as needed
+	elseif ent:GetClass() == "item_box_buckshot" then
+            local ammoPos = (ent:WorldSpaceCenter() + Vector(0, 0, 5)):ToScreen()
+
+            -- Draw the image at the ammo's position
+            surface.SetMaterial(ammoImage)
+            surface.SetDrawColor(Color(255, 255, 255, 255))
+            surface.DrawTexturedRect(ammoPos.x - 32, ammoPos.y - 32, 128, 128)  -- Adjust size as needed
         end
     end
 end)
+
+
+
 
 
 local armorBatteryImage = Material("yorch/ArmorHUD")
@@ -610,10 +620,6 @@ local function GetHealthPercentage(player)
     end
     return 0
 end
-
-
-
-
 
 
 
@@ -675,7 +681,7 @@ end
             local playerName = player:Nick()
             surface.SetFont("MyFont3")
             local textWidth, textHeight = surface.GetTextSize(playerName)
-            surface.SetTextPos(x - textWidth, y - additionalImageHeight - -30)
+            surface.SetTextPos(x - textWidth - -15, y - additionalImageHeight - -30)
             surface.SetTextColor(Color(100, 200, 100, 255)) -- Set the color (green in this case)
             surface.DrawText(playerName)
         end
@@ -779,6 +785,7 @@ end
 
 
 
+
 -- hook.Add("PlayerStartVoice", "ImageOnVoice", function()
 --     hook.Add("HUDPaint", "ImageOnVoice", iconfunc)
 -- end)
@@ -786,12 +793,6 @@ end
 -- hook.Add("PlayerEndVoice", "ImageOnVoice", function()
 --     hook.Remove("HUDPaint", "ImageOnVoice")
 -- end)
-
-
-
-
-
-
 
 
 

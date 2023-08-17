@@ -1,4 +1,4 @@
-"Vertexlitgeneric"
+"LightmappedGeneric"
 {
 	"$basetexture" "yorch/beckethud"
 
@@ -10,7 +10,7 @@
 
     	 "$selfillum" "1"
 	"$selfillummask" "yorch/beckethud_si"
-
+	"$ambient" "{1 1 1}"
 	"Proxies"
 	{
 		"Sine"

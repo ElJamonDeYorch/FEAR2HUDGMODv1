@@ -1,4 +1,4 @@
-    if SERVER then
+ if SERVER then
         return
     end
 
@@ -30,6 +30,9 @@ surface.CreateFont("MyFont4", {
     weight = 500,
     italic = false
 })
+
+
+local hudScaleFactor = 1.0
 
 
 hook.Add("HUDPaint", "DrawRotatedText", function()
@@ -248,8 +251,8 @@ surface.DrawTexturedRect(adjustedX, adjustedY, adjustedWidth, adjustedHeight)
     local healthPercentage = health / maxHealth
      local barWidth = 213
     local barHeight = 85
-    local barX = adjustedX + barWidth + 40
-    local barY = adjustedY + barHeight + 794 -- Separación entre el cuadrado y la barra
+    local barX = originalWidth + barWidth + -985
+    local barY = originalHeight + barHeight + 26 -- Separación entre el cuadrado y la barra
     -- Inside your HUD drawing function
     local textureToUse = healthBarTexture -- Default to normal health bar texture
 if healthPercentage < 0.25 then
@@ -294,14 +297,40 @@ end
     surface.DrawTexturedRectUV(barX, barY, barWidth, barHeight, 0, 0, 1, 1)
 
 
-    local armor = LocalPlayer():Armor()
-    local armorBarWidth = 212
-    local armorBarHeight = 84
-    local armorBarX = adjustedX + barWidth + -18
-    local armorBarY = adjustedY + barHeight + 802 -- Separación entre el cuadrado y la barra
-    surface.SetDrawColor(255, 255, 255, 255)
+local armor = LocalPlayer():Armor()
+local armorBarWidth = 212
+local armorBarHeight = 84
+local armorBarX = adjustedX + barWidth - 18
+local armorBarY = adjustedY + barHeight + 802 -- Separación entre el cuadrado y la barra
+
+-- Calculate the width of the first armor bar (up to 100)
+local firstBarWidth = math.min(100, armor) / 100 * armorBarWidth
+
+if armor > 100 then
+    -- Calculate the width of the second armor bar (above 100)
+    local secondBarWidth = math.min(armor - 100, 100) / 100 * armorBarWidth
+
+    -- Draw the first armor bar
     surface.SetMaterial(Material("yorch/armorbar"))
-    surface.DrawTexturedRectUV(armorBarX, armorBarY, armorBarWidth * (armor / 200), armorBarHeight, 0, 0, armor / 200, 1)
+    surface.DrawTexturedRectUV(armorBarX, armorBarY, firstBarWidth, armorBarHeight, 0, 0, firstBarWidth / armorBarWidth, 1)
+
+    -- Draw the second armor bar
+    local secondArmorBarX = adjustedX + barWidth - 17
+    local secondArmorBarY = armorBarY + armorBarHeight + -85 -- Separation between the two bars
+    surface.SetMaterial(Material("yorch/armorbar2")) -- Use the texture for the second bar
+    surface.DrawTexturedRectUV(secondArmorBarX, secondArmorBarY, secondBarWidth, armorBarHeight, 0, 0, secondBarWidth / armorBarWidth, 1)
+else
+    -- Draw only the first armor bar when armor <= 100
+    surface.SetMaterial(Material("yorch/armorbar"))
+    surface.DrawTexturedRectUV(armorBarX, armorBarY, firstBarWidth, armorBarHeight, 0, 0, firstBarWidth / armorBarWidth, 1)
+end
+
+
+
+
+
+
+
 
 
     local barWidth = 300
@@ -543,6 +572,28 @@ end)
 
 
 
+hook.Add("HUDPaint", "KeyItemImage", function()
+    local client = LocalPlayer()
+    local healingItemDistance = 100  -- Adjust the distance at which the image appears
+
+    for _, ent in pairs(ents.FindInSphere(client:GetPos(), healingItemDistance)) do
+        local itemName = ent:GetClass()  -- Get the entity's class name
+
+        -- Check if the entity's class name contains "key"
+        if string.find(itemName, "key10") then
+            local itemPos = (ent:WorldSpaceCenter() + Vector(2, 3, 5)):ToScreen()
+
+            -- Draw the image at the item's position
+            surface.SetMaterial(yorch/keyitemshud)  -- Use a common image for all "key" items
+            surface.SetDrawColor(Color(255, 255, 255, 255))
+            surface.DrawTexturedRect(itemPos.x - 32, itemPos.y - 32, 150, 130)  -- Adjust size as needed
+        end
+    end
+end)
+
+
+
+
 
 local weaponImage = Material("yorch/weaponhud")  -- Replace with the path to your weapon image
 
@@ -553,7 +604,7 @@ hook.Add("HUDPaint", "WeaponImage", function()
     for _, ent in pairs(ents.FindInSphere(client:GetPos(), weaponDistance)) do
         -- Replace "weapon_..." with the appropriate class name for the weapon entity
         if string.find(ent:GetClass(), "weapon_") and ent:GetOwner() == NULL then
-            local weaponPos = (ent:WorldSpaceCenter() + Vector(0, 0, 5)):ToScreen()
+            local weaponPos = (ent:GetPos() + Vector(0, 0, 0)):ToScreen()
 
             -- Draw the image at the weapon's position
             surface.SetMaterial(weaponImage)
@@ -660,7 +711,7 @@ end
             local healthPercentage = GetHealthPercentage(player)
             local healthImage = GetImageBasedOnHealth(healthPercentage)
 
-            local headPos = player:GetBonePosition(player:LookupBone("ValveBiped.Bip01_Spine2")):ToScreen()
+            local headPos = player:GetBonePosition(player:LookupBone("ValveBiped.Bip01_spine2")):ToScreen()
             local x = headPos.x
             local y = headPos.y
 
@@ -681,8 +732,8 @@ end
             local playerName = player:Nick()
             surface.SetFont("MyFont3")
             local textWidth, textHeight = surface.GetTextSize(playerName)
-            surface.SetTextPos(x - textWidth - -15, y - additionalImageHeight - -30)
-            surface.SetTextColor(Color(100, 200, 100, 255)) -- Set the color (green in this case)
+            surface.SetTextPos(x - textWidth - -15, y - additionalImageHeight - -35)
+            surface.SetTextColor(Color(100, 175, 200, 255)) -- Set the color (green in this case)
             surface.DrawText(playerName)
         end
     end

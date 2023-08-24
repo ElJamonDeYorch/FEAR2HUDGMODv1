@@ -389,6 +389,9 @@ if IsValid(weapon) then
    elseif weaponType == "weapon_357" then
         -- If it's a rifle, use a different material path for bullets
         materialPath = "yorch/pistolshell"
+   elseif weaponType == "weapon_fear2autoshotgun" then
+        -- If it's a rifle, use a different material path for bullets
+        materialPath = "yorch/shotgunshell"
     end
 
     surface.SetMaterial(Material(materialPath))
